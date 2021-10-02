@@ -39,6 +39,7 @@ function addTask(textInput) {
     tasks.appendChild(li);
     clearInput();
     createBtnClear(li);
+    saveTask();
 }
 
 
@@ -52,5 +53,29 @@ document.addEventListener('click', function (e) {
 
     if (element.classList.contains('clear')) {
         element.parentElement.remove();
+        saveTask();
     }
 });
+
+function saveTask() {
+    const taskLi = tasks.querySelectorAll('li');
+    const taskList = [];
+
+    for (let task of taskLi) {
+        let taskText = task.innerText;
+        taskText = taskText.replace('Clear', '').trim();
+        taskList.push(taskText);
+    }
+    const taskJSON = JSON.stringify(taskList);
+    localStorage.setItem('task', taskJSON);
+}
+
+function addSaveTask() {
+    const task = localStorage.getItem('task');
+    const taskList = JSON.parse(task);
+
+    for (let task of taskList) {
+        addTask(task);
+    }
+}
+addSaveTask();
